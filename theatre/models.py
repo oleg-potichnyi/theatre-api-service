@@ -45,3 +45,15 @@ class Play(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Performance(models.Model):
+    play = models.ForeignKey(Play, on_delete=models.CASCADE)
+    theatre_hall = models.ForeignKey(TheatreHall, on_delete=models.CASCADE)
+    show_time = models.DateTimeField()
+
+    class Meta:
+        ordering = ["-show_time"]
+
+    def __str__(self) -> str:
+        return self.play.title + " " + str(self.show_time)

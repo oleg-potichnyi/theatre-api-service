@@ -8,9 +8,7 @@ class Command(BaseCommand):
     helps = "Wait for DB"
 
     def handle(self, *args, **options):
-        self.stdout.write(
-            self.style.SUCCESS("Waiting for DB...")
-        )
+        self.stdout.write(self.style.SUCCESS("Waiting for DB..."))
         db_connection = None
         while not db_connection:
             try:
@@ -22,6 +20,4 @@ class Command(BaseCommand):
                     )
                 )
                 time.sleep(1)
-        self.stdout.write(
-            self.style.SUCCESS("DB available")
-        )
+        self.stdout.write(self.style.SUCCESS("DB available"))

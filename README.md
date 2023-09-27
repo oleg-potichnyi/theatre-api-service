@@ -53,6 +53,6 @@ docker-compose down
 ## User credentials
 
 ```shell
-Email: 
-password: 
+Email: admin@admin.com
+password: user12345
 ```

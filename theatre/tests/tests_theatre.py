@@ -186,7 +186,10 @@ class AdminPlayApiTests(TestCase):
         payload = {
             "title": "Romeo & Juliet",
             "genres": [genre1.id, genre2.id],
-            "description": "Tragedy by W. Shakespeare, telling about the love of a young man and a girl.",
+            "description": (
+                "Tragedy by W. Shakespeare, telling about"
+                " the love of a young man and a girl."
+            ),
             "duration": 100,
         }
         res = self.client.post(THEATRE_URL, payload)
@@ -200,11 +203,17 @@ class AdminPlayApiTests(TestCase):
 
     def test_create_play_with_actors(self):
         actor1 = Actor.objects.create(first_name="Dmytro ", last_name="Stupka")
-        actor2 = Actor.objects.create(first_name="Oksana ", last_name="Zhdanova")
+        actor2 = Actor.objects.create(
+            first_name="Oksana ",
+            last_name="Zhdanova"
+        )
         payload = {
             "title": "Romeo & Juliet",
             "actors": [actor1.id, actor2.id],
-            "description": "Tragedy by W. Shakespeare, telling about the love of a young man and a girl.",
+            "description": (
+                "Tragedy by W. Shakespeare, telling about"
+                " the love of a young man and a girl."
+            ),
             "duration": 100,
         }
         res = self.client.post(THEATRE_URL, payload)

@@ -28,15 +28,32 @@ pip install -r requirements.txt
 # Run this command to apply migrations and update the database schema:
 python manage.py migrate
 # Start the development server:
-## Docker Compose: Ensure that Docker and Docker Compose are installed on your system.
-## Build the Docker Containers:
+python manage.py runserver
+```
+```shell
+# Start the Application via Docker
+# Clone the repository:
+git clone https://github.com/oleg-potichnyi/theatre-api-service.git
+# Change directory to the project folder:
+cd theatre-api-service
 # Setup via Docker
+# Build the Docker Containers:
 docker-compose build
-## Start the Docker Containers:
+# Start the Docker Containers:
 docker-compose up
-## Stopping the Server:
+# Stopping the Docker Containers:
+# To stop the Docker containers, use the following command:
 docker-compose down
 ```
+
+## How to Obtain a JWT Token
+
+In order to access protected endpoints in this Theatre API, you need to obtain a JSON Web Token (JWT) by authenticating as a user. Follow these steps to get your JWT token:
+1.Register an Account
+2.Use your registered email and password to log in and obtain your JWT token.
+3.After sending the login request, you will receive a JSON response that includes your JWT token.
+4.Include the obtained `access_token` in the `Authorization` header of your requests to protected API endpoints.
+5.If your access token expires, you can use the `refresh_token` to obtain a new one without having to log in again. 
 
 ## Features
 

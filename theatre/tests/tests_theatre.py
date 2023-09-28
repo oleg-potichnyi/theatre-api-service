@@ -62,12 +62,9 @@ class AuthenticatedPlayApiTests(TestCase):
     def test_list_plays(self):
         sample_theatre()
         sample_theatre()
-
         res = self.client.get(THEATRE_URL)
-
         plays = Play.objects.order_by("id")
         serializer = PlayListSerializer(plays, many=True)
-
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
 

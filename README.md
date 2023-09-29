@@ -71,5 +71,5 @@ In order to access protected endpoints in this Theatre API, you need to obtain a
 
 ```shell
 Email: admin@admin.com
-password: user12345
+password: admin
 ```

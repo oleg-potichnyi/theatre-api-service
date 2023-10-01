@@ -99,7 +99,8 @@ DATABASES = {
         "NAME": 'db.sqlite3',
     }
 }
-if 'manage.py' and 'test' in sys.argv:
+
+if "manage.py" and "test" in sys.argv:
     MIGRATION_MODULES = {"theatre": "theatre.test_migrations"}
 
 # Password validation

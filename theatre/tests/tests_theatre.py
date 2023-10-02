@@ -23,9 +23,7 @@ def sample_theatre(**params):
 
 
 def sample_performance(**params):
-    theatre_hall = TheatreHall.objects.create(
-        name="Blue", rows=10, seats_in_row=20
-    )
+    theatre_hall = TheatreHall.objects.create(name="Blue", rows=10, seats_in_row=20)
 
     defaults = {
         "show_time": "2022-06-02 14:00:00",
@@ -80,9 +78,7 @@ class AuthenticatedPlayApiTests(TestCase):
 
         play3 = sample_theatre(title="Play without genres")
 
-        res = self.client.get(
-            THEATRE_URL, {"genres": f"{genre1.id},{genre2.id}"}
-        )
+        res = self.client.get(THEATRE_URL, {"genres": f"{genre1.id},{genre2.id}"})
 
         serializer1 = PlayListSerializer(play1)
         serializer2 = PlayListSerializer(play2)
@@ -104,9 +100,7 @@ class AuthenticatedPlayApiTests(TestCase):
 
         play3 = sample_theatre(title="Play without actors")
 
-        res = self.client.get(
-            THEATRE_URL, {"actors": f"{actor1.id},{actor2.id}"}
-        )
+        res = self.client.get(THEATRE_URL, {"actors": f"{actor1.id},{actor2.id}"})
 
         serializer1 = PlayListSerializer(play1)
         serializer2 = PlayListSerializer(play2)
@@ -134,9 +128,7 @@ class AuthenticatedPlayApiTests(TestCase):
     def test_retrieve_play_detail(self):
         play = sample_theatre()
         play.genres.add(Genre.objects.create(name="Genre"))
-        play.actors.add(
-            Actor.objects.create(first_name="Actor", last_name="Last")
-        )
+        play.actors.add(Actor.objects.create(first_name="Actor", last_name="Last"))
 
         url = detail_url(play.id)
         res = self.client.get(url)
@@ -200,10 +192,7 @@ class AdminPlayApiTests(TestCase):
 
     def test_create_play_with_actors(self):
         actor1 = Actor.objects.create(first_name="Dmytro ", last_name="Stupka")
-        actor2 = Actor.objects.create(
-            first_name="Oksana ",
-            last_name="Zhdanova"
-        )
+        actor2 = Actor.objects.create(first_name="Oksana ", last_name="Zhdanova")
         payload = {
             "title": "Romeo & Juliet",
             "actors": [actor1.id, actor2.id],

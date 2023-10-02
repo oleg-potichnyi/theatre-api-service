@@ -4,10 +4,10 @@ from django.contrib.contenttypes.models import ContentType
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from theatre.models import Genre
+from theatre.models import Reservation
 
 
-class GenreViewSetTests(APITestCase):
+class ReservationViewSetTests(APITestCase):
     def setUp(self):
         self.adminuser = get_user_model().objects.create_user(
             email="admin@example.com",
@@ -18,28 +18,22 @@ class GenreViewSetTests(APITestCase):
         self.user = get_user_model().objects.create_user(
             email="test@example.com", password="testpassword"
         )
-        content_type = ContentType.objects.get_for_model(Genre)
+        content_type = ContentType.objects.get_for_model(Reservation)
         permission, created = Permission.objects.get_or_create(
-            codename="can_create_genre",
-            name="Can Create Genre",
+            codename="can_create_reservation",
+            name="Can Create Reservation",
             content_type=content_type,
         )
         self.user.user_permissions.add(permission)
         self.adminuser.user_permissions.add(permission)
 
         self.client.force_authenticate(user=self.user)
+        Reservation.objects.create(user=self.user)
+        Reservation.objects.create(user=self.user)
+        Reservation.objects.create(user=self.adminuser)
 
-    def test_list_genres(self):
-        url = "/api/theatre/genres/"
+    def test_list_reservations(self):
+        url = "/api/theatre/reservations/"
         response = self.client.get(url)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), Genre.objects.count())
-
-    def test_create_genre(self):
-        url = "/api/theatre/genres/"
-        data = {"name": "Drama"}
-        self.client.force_authenticate(user=self.adminuser)
-        response = self.client.post(url, data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Genre.objects.get(name="Drama").name, "Drama")
+        self.assertEqual(len(response.data), Reservation.objects.filter(user=self.user).count())

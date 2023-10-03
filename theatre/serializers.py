@@ -86,6 +86,7 @@ class PerformanceListSerializer(PerformanceSerializer):
         source="theatre.capacity", read_only=True
     )
     tickets_available = serializers.IntegerField(read_only=True)
+    show_time = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = Performance

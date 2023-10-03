@@ -31,13 +31,15 @@ class ReservationViewSetTests(APITestCase):
         Reservation.objects.create(user=self.user)
         Reservation.objects.create(user=self.user)
         Reservation.objects.create(user=self.adminuser)
-        play = Play.objects.create(title="Play", description="Description", duration=100)
+        play = Play.objects.create(
+            title="Play", description="Description", duration=100
+        )
         theatre_hall = TheatreHall.objects.create(name="Name", rows=10, seats_in_row=20)
-        show_time = Performance.objects.create(show_time="2023-10-15T15:30:00Z")
+        show_time = "2023-10-15T15:30:00Z"
         self.performance = Performance.objects.create(
             play_id=play.id,
             theatre_hall_id=theatre_hall.id,
-            show_time_id=show_time.id,
+            show_time=show_time,
         )
 
     def test_create_reservation(self):

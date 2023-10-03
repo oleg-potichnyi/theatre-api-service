@@ -4,7 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from theatre.models import Reservation
+from theatre.models import Reservation, Play, Performance, TheatreHall
 
 
 class ReservationViewSetTests(APITestCase):
@@ -31,9 +31,36 @@ class ReservationViewSetTests(APITestCase):
         Reservation.objects.create(user=self.user)
         Reservation.objects.create(user=self.user)
         Reservation.objects.create(user=self.adminuser)
+        play = Play.objects.create(title="Play", description="Description", duration=100)
+        theatre_hall = TheatreHall.objects.create(name="Name", rows=10, seats_in_row=20)
+        show_time = Performance.objects.create(show_time="2023-10-15T15:30:00Z")
+        self.performance = Performance.objects.create(
+            play_id=play.id,
+            theatre_hall_id=theatre_hall.id,
+            show_time_id=show_time.id,
+        )
+
+    def test_create_reservation(self):
+        url = "/api/theatre/reservations/"
+        data = {
+            "tickets": [
+                {"row": 1, "seat": 1, "performance": self.performance.id},
+                {"row": 2, "seat": 2, "performance": self.performance.id},
+            ]
+        }
+        response = self.client.post(url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertIn("id", response.data)
+        self.assertIn("tickets", response.data)
+        self.assertIn("created_at", response.data)
+        created_reservation = Reservation.objects.get(id=response.data["id"])
+        self.assertEqual(created_reservation.user, self.user)
+        self.assertEqual(created_reservation.tickets.count(), 2)
 
     def test_list_reservations(self):
         url = "/api/theatre/reservations/"
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), Reservation.objects.filter(user=self.user).count())
+        self.assertEqual(
+            response.data["count"], Reservation.objects.filter(user=self.user).count()
+        )

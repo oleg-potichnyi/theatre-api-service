@@ -29,6 +29,8 @@ class PerformanceViewSetTests(APITestCase):
         self.adminuser.user_permissions.add(permission)
 
         self.client.force_authenticate(user=self.user)
+        self.play = Play.objects.create(title="Play", description="Description", duration=100)
+        self.theatre_hall = TheatreHall.objects.create(name="Name", rows=10, seats_in_row=20)
 
     def test_list_performances(self):
         url = "/api/theatre/performances/"
@@ -37,22 +39,20 @@ class PerformanceViewSetTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), Performance.objects.count())
 
-    # def test_create_performance(self):
-    #     url = "/api/theatre/performances/"
-    #     play_id = 1
-    #     theatre_hall_id = 1
-    #     play_instance = get_object_or_404(Play, id=play_id)
-    #     theatre_hall_instance = get_object_or_404(TheatreHall, id=theatre_hall_id)
-    #     data = {
-    #         "play": play_instance,
-    #         "theatre_hall": theatre_hall_instance,
-    #         "show_time": "2023-10-15T15:30:00Z",
-    #     }
-    #     self.client.force_authenticate(user=self.adminuser)
-    #     response = self.client.post(url, data)
-    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-    #     self.assertTrue(Performance.objects.filter(
-    #         play=play_instance,
-    #         theatre_hall=theatre_hall_instance,
-    #         show_time="2023-10-15T15:30:00Z").exists()
-    #                     )
+    def test_create_performance(self):
+        url = "/api/theatre/performances/"
+        data = {
+            "play": self.play.id,
+            "theatre_hall": self.theatre_hall.id,
+            "show_time": "2023-10-15T15:30:00Z",
+        }
+        self.client.force_authenticate(user=self.adminuser)
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(
+            Performance.objects.filter(
+                play=self.play.id,
+                theatre_hall=self.theatre_hall,
+                show_time="2023-10-15T15:30:00Z",
+            ).exists()
+        )

@@ -4,10 +4,10 @@ from django.contrib.contenttypes.models import ContentType
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from theatre.models import Genre
+from theatre.models import Actor
 
 
-class GenreViewSetTests(APITestCase):
+class ActorViewSetTests(APITestCase):
     def setUp(self):
         self.adminuser = get_user_model().objects.create_user(
             email="admin@example.com",
@@ -18,10 +18,10 @@ class GenreViewSetTests(APITestCase):
         self.user = get_user_model().objects.create_user(
             email="test@example.com", password="testpassword"
         )
-        content_type = ContentType.objects.get_for_model(Genre)
+        content_type = ContentType.objects.get_for_model(Actor)
         permission, created = Permission.objects.get_or_create(
-            codename="can_create_genre",
-            name="Can Create Genre",
+            codename="can_create_actor",
+            name="Can Create Actor",
             content_type=content_type,
         )
         self.user.user_permissions.add(permission)
@@ -29,17 +29,18 @@ class GenreViewSetTests(APITestCase):
 
         self.client.force_authenticate(user=self.user)
 
-    def test_list_genres(self):
-        url = "/api/theatre/genres/"
+    def test_list_actors(self):
+        url = "/api/theatre/actors/"
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), Genre.objects.count())
+        self.assertEqual(len(response.data), Actor.objects.count())
 
-    def test_create_genre(self):
-        url = "/api/theatre/genres/"
-        data = {"name": "Drama"}
+    def test_create_actor(self):
+        url = "/api/theatre/actors/"
+        data = {"first_name": "Dmytro", "last_name": "Stupka"}
         self.client.force_authenticate(user=self.adminuser)
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Genre.objects.get(name="Drama").name, "Drama")
+        self.assertEqual(Actor.objects.get(first_name="Dmytro").first_name, "Dmytro")
+        self.assertEqual(Actor.objects.get(last_name="Stupka").last_name, "Stupka")

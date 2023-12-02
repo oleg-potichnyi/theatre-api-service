@@ -2,6 +2,28 @@
 
 This project for managing theatre with actors and genres
 
+## Technology stack
+
+* Backend:
+  - Language: Python 3 
+  - Framework: Django 
+  - Database: Postgresql 
+* Dependency Management: pip
+* Containerization: Docker
+* Virtual Environment: venv
+* Database Migrations: Django Migrations
+* Collaboration and Version Control:
+  - Version Control System: Git
+  - Repository Hosting: GitHub
+* API Documentation: Swagger
+* Authentication:
+  - Framework: Django Authentication
+  - Token-based: JWT
+* Testing: Unittest
+* Environment Variables: .env
+* Other: requirements.txt
+
+
 ## Installation
 
 Python3 must be already installed

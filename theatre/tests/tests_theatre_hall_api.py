@@ -4,10 +4,10 @@ from django.contrib.contenttypes.models import ContentType
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from theatre.models import Genre
+from theatre.models import TheatreHall
 
 
-class GenreViewSetTests(APITestCase):
+class TheatreHallViewSetTests(APITestCase):
     def setUp(self):
         self.adminuser = get_user_model().objects.create_user(
             email="admin@example.com",
@@ -18,10 +18,10 @@ class GenreViewSetTests(APITestCase):
         self.user = get_user_model().objects.create_user(
             email="test@example.com", password="testpassword"
         )
-        content_type = ContentType.objects.get_for_model(Genre)
+        content_type = ContentType.objects.get_for_model(TheatreHall)
         permission, created = Permission.objects.get_or_create(
-            codename="can_create_genre",
-            name="Can Create Genre",
+            codename="can_create_theatre_hall",
+            name="Can Create TheatreHall",
             content_type=content_type,
         )
         self.user.user_permissions.add(permission)
@@ -29,17 +29,19 @@ class GenreViewSetTests(APITestCase):
 
         self.client.force_authenticate(user=self.user)
 
-    def test_list_genres(self):
-        url = "/api/theatre/genres/"
+    def test_list_theatre_halls(self):
+        url = "/api/theatre/theatre_halls/"
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), Genre.objects.count())
+        self.assertEqual(len(response.data), TheatreHall.objects.count())
 
-    def test_create_genre(self):
-        url = "/api/theatre/genres/"
-        data = {"name": "Drama"}
+    def test_create_theatre_hall(self):
+        url = "/api/theatre/theatre_halls/"
+        data = {"name": "Blue", "rows": 11, "seats_in_row": 25}
         self.client.force_authenticate(user=self.adminuser)
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Genre.objects.get(name="Drama").name, "Drama")
+        self.assertEqual(TheatreHall.objects.get(name="Blue").name, "Blue")
+        self.assertEqual(TheatreHall.objects.get(rows=11).rows, 11)
+        self.assertEqual(TheatreHall.objects.get(seats_in_row=25).seats_in_row, 25)
